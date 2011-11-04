@@ -1,9 +1,0 @@
-<package project="Mer:Trunk:Base" name="gnutls">
-  <title>A TLS protocol implementation</title>
-  <description>GnuTLS is a project that aims to develop a library which provides a secure 
-layer, over a reliable transport layer. Currently the GnuTLS library implements
-the proposed standards by the IETF's TLS working group.
-
-</description>
-  <url>http://www.gnutls.org/</url>
-</package>
