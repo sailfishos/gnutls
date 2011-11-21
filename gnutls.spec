@@ -1,6 +1,6 @@
 Summary: A TLS protocol implementation
 Name: gnutls
-Version: 2.10.4
+Version: 2.12.9
 Release: 1
 # The libgnutls core library is LGPLv2+, MeeGo doesn't ship other
 # utilities or remaining libraries
@@ -14,7 +14,9 @@ URL: http://www.gnutls.org/
 #Source1: ftp://ftp.gnutls.org/pub/gnutls/%{name}-%{version}.tar.gz.sig
 # XXX patent tainted SRP code removed.
 Source0: %{name}-%{version}.tar.bz2
-Source1: libgnutls-config
+Source1: %{name}-%{version}.tar.bz2.sig
+Source2: libgnutls-config
+Patch0: gnutls-2.12.9-compile-fix.patch
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: libgcrypt >= 1.2.2
@@ -43,6 +45,9 @@ the GnuTLS library.
 %prep
 %setup -q
 
+# gnutls-2.12.9-compile-fix.patch
+%patch0 -p1
+
 # Remove other utils files
 rm -rf maint.mk libextra doc gl lib/gl/test \
   build-aux/vc-list-files \
@@ -57,7 +62,10 @@ done
 # On MeeGo we build core lib only
 pushd lib
 %configure --with-libtasn1-prefix=%{_prefix} \
-           --disable-srp-authentication
+           --disable-srp-authentication \
+           --with-libgcrypt \
+           --without-libnettle \
+           --without-p11-kit
 make
 cp COPYING COPYING.LIB
 popd
@@ -70,7 +78,7 @@ popd
 rm -f $RPM_BUILD_ROOT%{_bindir}/srptool
 rm -f $RPM_BUILD_ROOT%{_bindir}/gnutls-srpcrypt
 install -d $RPM_BUILD_ROOT%{_bindir}
-install -m755 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/libgnutls-config
+install -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/libgnutls-config
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/srptool.1
 rm -f $RPM_BUILD_ROOT%{_mandir}/man3/*srp*
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir

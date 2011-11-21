@@ -1,3 +1,7 @@
+* Mon Nov 21 2011 Marko Saukko <marko.saukko@cybercom.com> - 2.12.9
+- Upgrade to latest upstream release in 2.x series.
+- Added gnutls-2.12.9-compile-fix.patch to fix compile.
+
 * Mon Jan 17 2011 Yan Li <yan.i.li@intel.com> - 2.10.4
 - Upgraded to latest upstream release (BMC#12458)
 

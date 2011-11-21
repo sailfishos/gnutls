@@ -1,0 +1,21 @@
+diff -ruN --exclude='*~' gnutls-2.12.9.orig/lib/gnutls_kx.c gnutls-2.12.9/lib/gnutls_kx.c
+--- gnutls-2.12.9.orig/lib/gnutls_kx.c	2011-11-22 19:11:08.903013359 +0200
++++ gnutls-2.12.9/lib/gnutls_kx.c	2011-11-22 19:12:14.162748470 +0200
+@@ -39,7 +39,6 @@
+ #include <gnutls_datum.h>
+ #include <gnutls_rsa_export.h>
+ #include <gnutls_mbuffers.h>
+-#include "../libextra/ext_inner_application.h"  /* isn't this too much? */
+ 
+ /* This is a temporary function to be used before the generate_*
+    internal API is changed to use mbuffers. For now we don't avoid the
+@@ -140,9 +139,6 @@
+                      session->security_parameters.master_secret);
+     }
+ 
+-  /* TLS/IA inner secret is derived from the master secret. */
+-  _gnutls_ia_derive_inner_secret (session);
+-
+   if (!keep_premaster)
+     _gnutls_free_datum (&PREMASTER);
+ 
