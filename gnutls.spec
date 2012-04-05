@@ -1,6 +1,6 @@
 Summary: A TLS protocol implementation
 Name: gnutls
-Version: 2.12.9
+Version: 2.12.18
 Release: 1
 # The libgnutls core library is LGPLv2+, MeeGo doesn't ship other
 # utilities or remaining libraries
@@ -106,14 +106,14 @@ fi
 %files -f libgnutls.lang
 %defattr(-,root,root,-)
 %{_libdir}/libgnutls*.so.*
-%doc lib/COPYING.LIB README AUTHORS
+%doc lib/COPYING.LIB
 
 %files devel
 %defattr(-,root,root,-)
+%doc README AUTHORS
 %{_bindir}/libgnutls*-config
 %{_includedir}/*
 %{_libdir}/libgnutls*.a
 %{_libdir}/libgnutls*.so
 %{_libdir}/pkgconfig/*.pc
-#%{_mandir}/man3/*
-#%{_infodir}/gnutls*
+

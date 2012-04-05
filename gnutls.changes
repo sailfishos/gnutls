@@ -1,3 +1,6 @@
+* Thu Apr 05 2012 Marko Sauko <sage@merproject.org> - 2.12.18
+- Fixes MER#242: CVE-2012-1573 Recommendation: Upgrade to 2.12.18.
+
 * Mon Nov 21 2011 Marko Saukko <marko.saukko@cybercom.com> - 2.12.9
 - Upgrade to latest upstream release in 2.x series.
 - Added gnutls-2.12.9-compile-fix.patch to fix compile.
