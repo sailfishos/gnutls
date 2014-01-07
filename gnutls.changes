@@ -1,3 +1,7 @@
+* Tue Jan 07 2014 Davide Bettio <davide.bettio@ispirata.com> - 2.12.23
+- Updated to 2.12.23
+- Fixes CVE-2013-1619
+
 * Thu Apr 05 2012 Marko Sauko <sage@merproject.org> - 2.12.18
 - Fixes MER#242: CVE-2012-1573 Recommendation: Upgrade to 2.12.18.
 
