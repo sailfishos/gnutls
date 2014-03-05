@@ -1,3 +1,7 @@
+* Tue Jan 07 2014 Davide Bettio <davide.bettio@ispirata.com> - 2.12.23-2
+- Fix CVE-2013-2116
+- Fix CVE-2014-0092
+
 * Tue Jan 07 2014 Davide Bettio <davide.bettio@ispirata.com> - 2.12.23
 - Updated to 2.12.23
 - Fixes CVE-2013-1619
