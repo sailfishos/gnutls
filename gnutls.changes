@@ -1,3 +1,8 @@
+* Sun Jun 01 2014 Pasi Sjöholm <pasi.sjoholm@siirappi.com> - 2.12.23-3
+- Fixes CVE-2014-3466
+  http://www.gnutls.org/security.html#GNUTLS-SA-2014-3
+  https://www.gitorious.org/gnutls/gnutls/commit/688ea6428a432c39203d00acd1af0e7684e5ddfd
+
 * Tue Jan 07 2014 Davide Bettio <davide.bettio@ispirata.com> - 2.12.23-2
 - Fix CVE-2013-2116
 - Fix CVE-2014-0092
