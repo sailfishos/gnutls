@@ -9,6 +9,7 @@ Group: System/Libraries
 BuildRequires: libgcrypt-devel >= 1.2.2, gettext
 BuildRequires: zlib-devel, readline-devel, libtasn1-devel
 BuildRequires: lzo-devel, libtool, automake, autoconf
+BuildRequires: p11-kit-devel
 URL: http://www.gnutls.org/
 #Source0: ftp://ftp.gnutls.org/pub/gnutls/%{name}-%{version}.tar.gz
 #Source1: ftp://ftp.gnutls.org/pub/gnutls/%{name}-%{version}.tar.gz.sig
@@ -71,8 +72,7 @@ done
 # On MeeGo we build core lib only
 pushd lib
 %configure --disable-srp-authentication \
-           --with-libgcrypt \
-           --without-p11-kit
+           --with-libgcrypt
 
 make
 cp COPYING COPYING.LIB
