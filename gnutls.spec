@@ -70,11 +70,10 @@ done
 %build
 # On MeeGo we build core lib only
 pushd lib
-%configure --with-libtasn1-prefix=%{_prefix} \
-           --disable-srp-authentication \
+%configure --disable-srp-authentication \
            --with-libgcrypt \
-           --without-libnettle \
            --without-p11-kit
+
 make
 cp COPYING COPYING.LIB
 popd
