@@ -1,3 +1,6 @@
+* Fri Mar 20 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23-4
+- Fix CVE-2015-0294, CVE-2015-0282
+
 * Sun Jun 01 2014 Pasi Sjöholm <pasi.sjoholm@siirappi.com> - 2.12.23-3
 - Fixes CVE-2014-3466
   http://www.gnutls.org/security.html#GNUTLS-SA-2014-3

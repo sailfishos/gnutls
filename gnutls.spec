@@ -1,7 +1,7 @@
 Summary: A TLS protocol implementation
 Name: gnutls
 Version: 2.12.23
-Release: 3
+Release: 4
 # The libgnutls core library is LGPLv2+, MeeGo doesn't ship other
 # utilities or remaining libraries
 License: LGPLv2+
@@ -20,6 +20,8 @@ Patch0: gnutls-2.12.9-compile-fix.patch
 Patch1: CVE-2013-2116.patch
 Patch2: CVE-2014-0092.patch
 Patch3: CVE-2014-3466.patch
+Patch4: CVE-2015-0294.patch
+Patch5: CVE-2015-0282.patch
 
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: libgcrypt >= 1.2.2
@@ -56,6 +58,10 @@ the GnuTLS library.
 %patch2 -p1
 # CVE-2014-3466.patch
 %patch3 -p0
+# CVE-2015-0294.patch
+%patch4 -p1
+# CVE-2015-0282.patch
+%patch5 -p1
 
 # Remove other utils files
 rm -rf maint.mk libextra doc gl lib/gl/test \
