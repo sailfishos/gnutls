@@ -1,7 +1,9 @@
+%define gnutls_version 2.12.23
+
 Summary: A TLS protocol implementation
 Name: gnutls
-Version: 2.12.23
-Release: 4
+Version: %{gnutls_version}.1
+Release: 1
 # The libgnutls core library is LGPLv2+, MeeGo doesn't ship other
 # utilities or remaining libraries
 License: LGPLv2+
@@ -9,12 +11,13 @@ Group: System/Libraries
 BuildRequires: libgcrypt-devel >= 1.2.2, gettext
 BuildRequires: zlib-devel, readline-devel, libtasn1-devel
 BuildRequires: lzo-devel, libtool, automake, autoconf
+BuildRequires: p11-kit-devel
 URL: http://www.gnutls.org/
 #Source0: ftp://ftp.gnutls.org/pub/gnutls/%{name}-%{version}.tar.gz
 #Source1: ftp://ftp.gnutls.org/pub/gnutls/%{name}-%{version}.tar.gz.sig
 # XXX patent tainted SRP code removed.
-Source0: %{name}-%{version}.tar.bz2
-Source1: %{name}-%{version}.tar.bz2.sig
+Source0: %{name}-%{gnutls_version}.tar.bz2
+Source1: %{name}-%{gnutls_version}.tar.bz2.sig
 Source2: libgnutls-config
 Patch0: gnutls-2.12.9-compile-fix.patch
 Patch1: CVE-2013-2116.patch
@@ -48,7 +51,7 @@ This package contains files needed for developing applications with
 the GnuTLS library.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{gnutls_version}
 
 # gnutls-2.12.9-compile-fix.patch
 %patch0 -p1
@@ -76,11 +79,9 @@ done
 %build
 # On MeeGo we build core lib only
 pushd lib
-%configure --with-libtasn1-prefix=%{_prefix} \
-           --disable-srp-authentication \
-           --with-libgcrypt \
-           --without-libnettle \
-           --without-p11-kit
+%configure --disable-srp-authentication \
+           --with-libgcrypt
+
 make
 cp COPYING COPYING.LIB
 popd
