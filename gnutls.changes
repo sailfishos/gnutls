@@ -1,3 +1,6 @@
+* Tue Aug 25 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.3-1
+- Remove SSLv3 from default priority list. MER#1262
+
 * Mon Aug 24 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.2-1
 - Fix GNUTLS-SA-2015-2. MER#1094
 
