@@ -1,0 +1,34 @@
+From a8076fa599f0a37f8e12e30eeadd50a0ea3c67b7 Mon Sep 17 00:00:00 2001
+From: Nikos Mavrogiannopoulos <nmav@gnutls.org>
+Date: Sat, 25 Apr 2015 19:34:34 +0200
+Subject: [PATCH 2/3] before falling back to SHA1 as signature algorithm in TLS
+ 1.2 check if it is enabled
+
+---
+ lib/ext/signature.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+Index: gnutls-2.12.23/lib/ext_signature.c
+===================================================================
+--- gnutls-2.12.23.orig/lib/ext_signature.c
++++ gnutls-2.12.23/lib/ext_signature.c
+@@ -300,7 +300,10 @@ _gnutls_session_get_sign_algo (gnutls_se
+       || priv->sign_algorithms_size == 0)
+     /* none set, allow SHA-1 only */
+     {
+-      return _gnutls_x509_pk_to_sign (cert->subject_pk_algorithm, GNUTLS_DIG_SHA1);
++      ret = _gnutls_x509_pk_to_sign (cert->subject_pk_algorithm, GNUTLS_DIG_SHA1);
++      if (_gnutls_session_sign_algo_enabled (session, ret) < 0)
++        goto fail;
++      return ret;
+     }
+ 
+   for (i = 0; i < priv->sign_algorithms_size; i++)
+@@ -314,6 +317,7 @@ _gnutls_session_get_sign_algo (gnutls_se
+         }
+     }
+ 
++fail:
+   return GNUTLS_SIGN_UNKNOWN;
+ }
+ 

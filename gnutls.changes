@@ -1,3 +1,6 @@
+* Mon Aug 24 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.2-1
+- Fix GNUTLS-SA-2015-2. MER#1094
+
 * Fri May 01 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.1-1
 - Fix changelog
 - Use p11-kit for the system CA store. MER#949
