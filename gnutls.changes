@@ -1,3 +1,6 @@
+* Fri Oct 23 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.4-1
+- Do not strictly check certificate signature algorithms. Fixes MER#1386
+
 * Tue Aug 25 2015 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.12.23.3-1
 - Remove SSLv3 from default priority list. MER#1262
 
