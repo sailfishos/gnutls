@@ -1,0 +1,161 @@
+Index: gnutls-2.12.23/lib/auth_cert.c
+===================================================================
+--- gnutls-2.12.23.orig/lib/auth_cert.c
++++ gnutls-2.12.23/lib/auth_cert.c
+@@ -1117,17 +1117,6 @@ _gnutls_proc_x509_server_certificate (gn
+           goto cleanup;
+         }
+ 
+-      /* check if signature algorithm is supported */
+-      ret =
+-        _gnutls_session_sign_algo_enabled (session,
+-                                           peer_certificate_list
+-                                           [j].sign_algo);
+-      if (ret < 0)
+-        {
+-          gnutls_assert ();
+-          goto cleanup;
+-        }
+-
+       p += len;
+     }
+ 
+@@ -2098,14 +2087,7 @@ _gnutls_server_select_cert (gnutls_sessi
+ 	  /* *INDENT-OFF* */
+ 	  if (session->security_parameters.cert_type
+ 	      == cred->cert_list[i][0].cert_type
+-	      && (cred->cert_list[i][0].cert_type == GNUTLS_CRT_OPENPGP
+-		  ||	/* FIXME: make this a check for certificate
+-			   type capabilities */
+-		  !_gnutls_version_has_selectable_sighash
+-		  (gnutls_protocol_get_version (session))
+-		  ||
+-		  _gnutls_session_sign_algo_requested
+-		  (session, cred->cert_list[i][0].sign_algo) == 0))
++	      && (cred->cert_list[i][0].cert_type == GNUTLS_CRT_OPENPGP))
+ 	    {
+ 	      idx = i;
+ 	      break;
+Index: gnutls-2.12.23/lib/ext_signature.c
+===================================================================
+--- gnutls-2.12.23.orig/lib/ext_signature.c
++++ gnutls-2.12.23/lib/ext_signature.c
+@@ -278,8 +278,7 @@ unsigned int hash_len;
+ }
+ 
+ /* Returns a requested by the peer signature algorithm that
+- * matches the given public key algorithm. Index can be increased
+- * to return the second choice etc.
++ * matches the given certificate's public key algorithm.
+  */
+ gnutls_sign_algorithm_t
+ _gnutls_session_get_sign_algo (gnutls_session_t session, gnutls_cert* cert)
+@@ -321,59 +320,6 @@ fail:
+   return GNUTLS_SIGN_UNKNOWN;
+ }
+ 
+-
+-/* Check if the given signature algorithm is accepted by
+- * the peer. Returns 0 on success or a negative value
+- * on error.
+- */
+-int
+-_gnutls_session_sign_algo_requested (gnutls_session_t session,
+-                                     gnutls_sign_algorithm_t sig)
+-{
+-  unsigned i;
+-  int ret, hash;
+-  gnutls_protocol_t ver = gnutls_protocol_get_version (session);
+-  sig_ext_st *priv;
+-  extension_priv_data_t epriv;
+-
+-  if (!_gnutls_version_has_selectable_sighash (ver))
+-    {
+-      return 0;
+-    }
+-
+-  ret =
+-    _gnutls_ext_get_session_data (session,
+-                                  GNUTLS_EXTENSION_SIGNATURE_ALGORITHMS,
+-                                  &epriv);
+-  if (ret < 0)
+-    {
+-      gnutls_assert ();
+-      /* extension not received allow SHA1 and SHA256 */
+-      hash = _gnutls_sign_get_hash_algorithm (sig);
+-      if (hash == GNUTLS_DIG_SHA1 || hash == GNUTLS_DIG_SHA256)
+-        return 0;
+-      else
+-        return ret;
+-    }
+-  priv = epriv.ptr;
+-
+-  if (priv->sign_algorithms_size == 0)
+-    /* none set, allow all */
+-    {
+-      return 0;
+-    }
+-
+-  for (i = 0; i < priv->sign_algorithms_size; i++)
+-    {
+-      if (priv->sign_algorithms[i] == sig)
+-        {
+-          return 0;             /* ok */
+-        }
+-    }
+-
+-  return GNUTLS_E_UNSUPPORTED_SIGNATURE_ALGORITHM;
+-}
+-
+ /* Check if the given signature algorithm is supported.
+  * This means that it is enabled by the priority functions,
+  * and in case of a server a matching certificate exists.
+Index: gnutls-2.12.23/lib/ext_signature.h
+===================================================================
+--- gnutls-2.12.23.orig/lib/ext_signature.h
++++ gnutls-2.12.23/lib/ext_signature.h
+@@ -32,8 +32,6 @@
+ 
+ extern extension_entry_st ext_mod_sig;
+ 
+-int _gnutls_session_sign_algo_requested (gnutls_session_t session,
+-                                         gnutls_sign_algorithm_t sig);
+ gnutls_sign_algorithm_t
+ _gnutls_session_get_sign_algo (gnutls_session_t session, gnutls_cert* cert);
+ int _gnutls_sign_algorithm_parse_data (gnutls_session_t session,
+Index: gnutls-2.12.23/lib/gnutls_cert.c
+===================================================================
+--- gnutls-2.12.23.orig/lib/gnutls_cert.c
++++ gnutls-2.12.23/lib/gnutls_cert.c
+@@ -914,7 +914,6 @@ _gnutls_x509_crt_to_gcert (gnutls_cert *
+ 
+   memset (gcert, 0, sizeof (gnutls_cert));
+   gcert->cert_type = GNUTLS_CRT_X509;
+-  gcert->sign_algo = gnutls_x509_crt_get_signature_algorithm (cert);
+ 
+   if (!(flags & CERT_NO_COPY))
+     {
+Index: gnutls-2.12.23/lib/openpgp/gnutls_openpgp.c
+===================================================================
+--- gnutls-2.12.23.orig/lib/openpgp/gnutls_openpgp.c
++++ gnutls-2.12.23/lib/openpgp/gnutls_openpgp.c
+@@ -730,7 +730,6 @@ _gnutls_openpgp_crt_to_gcert (gnutls_cer
+ 
+   memset (gcert, 0, sizeof (gnutls_cert));
+   gcert->cert_type = GNUTLS_CRT_OPENPGP;
+-  gcert->sign_algo = GNUTLS_SIGN_UNKNOWN;       /* N/A here */
+ 
+   gcert->version = gnutls_openpgp_crt_get_version (cert);
+   gcert->params_size = MAX_PUBLIC_PARAMS_SIZE;
+Index: gnutls-2.12.23/lib/gnutls_cert.h
+===================================================================
+--- gnutls-2.12.23.orig/lib/gnutls_cert.h
++++ gnutls-2.12.23/lib/gnutls_cert.h
+@@ -59,7 +59,6 @@ typedef struct gnutls_cert
+   /* holds the type (PGP, X509)
+    */
+   gnutls_certificate_type_t cert_type;
+-  gnutls_sign_algorithm_t sign_algo;
+ 
+   gnutls_datum_t raw;
+ 
