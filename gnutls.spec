@@ -39,8 +39,6 @@ Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 Requires: libgcrypt-devel
 Requires: pkgconfig
-Requires(post): /sbin/install-info
-Requires(preun): /sbin/install-info
 
 %description
 GnuTLS is a project that aims to develop a library which provides a secure 
@@ -53,6 +51,14 @@ layer, over a reliable transport layer. Currently the GnuTLS library implements
 the proposed standards by the IETF's TLS working group.
 This package contains files needed for developing applications with
 the GnuTLS library.
+
+%package doc
+Summary:   Documentation for %{name}
+Group:     Documentation
+Requires:  %{name} = %{version}-%{release}
+
+%description doc
+%{summary}.
 
 %prep
 %setup -q -n %{name}-%{gnutls_version}
@@ -107,10 +113,13 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/srptool
 rm -f $RPM_BUILD_ROOT%{_bindir}/gnutls-srpcrypt
 install -d $RPM_BUILD_ROOT%{_bindir}
 install -m755 %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/libgnutls-config
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/srptool.1
-rm -f $RPM_BUILD_ROOT%{_mandir}/man3/*srp*
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
+mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
+install -m0644 -t $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version} \
+        README AUTHORS
+
 %find_lang libgnutls
 
 %clean
@@ -120,28 +129,19 @@ rm -fr $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
-%post devel
-if [ -f %{_infodir}/gnutls.info.gz ]; then
-    /sbin/install-info %{_infodir}/gnutls.info.gz %{_infodir}/dir || :
-fi
-
-%preun devel
-if [ $1 = 0 -a -f %{_infodir}/gnutls.info.gz ]; then
-   /sbin/install-info --delete %{_infodir}/gnutls.info.gz %{_infodir}/dir || :
-fi
-
-
 %files -f libgnutls.lang
 %defattr(-,root,root,-)
+%license lib/COPYING.LIB
 %{_libdir}/libgnutls*.so.*
-%doc lib/COPYING.LIB
 
 %files devel
 %defattr(-,root,root,-)
-%doc README AUTHORS
 %{_bindir}/libgnutls*-config
 %{_includedir}/*
 %{_libdir}/libgnutls*.a
 %{_libdir}/libgnutls*.so
 %{_libdir}/pkgconfig/*.pc
 
+%files doc
+%defattr(-,root,root,-)
+%{_docdir}/%{name}-%{version}
