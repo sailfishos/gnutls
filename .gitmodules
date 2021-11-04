@@ -1,3 +1,0 @@
-[submodule "gnutls"]
-	path = gnutls
-	url = https://git.sailfishos.org/mirror/gnutls.git
